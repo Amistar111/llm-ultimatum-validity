@@ -1,0 +1,94 @@
+# Modifiers applied on top of a variant. Each has an id that is logged with the run.
+version: 0.1
+
+stake:
+  canonical: 1000            # kept at the Mind the Gap value for comparability
+  sweep: [10, 100, 1000, 10000]
+  non_round: 970             # round-number cue removed while staying the same order of magnitude
+  note: >
+    Prediction if the model responds to structure: the relative offer is approximately stable
+    across the sweep and the absolute offer scales with the stake. A memorised figure held fixed
+    in absolute terms is the failure signature.
+  source: "Cameron (1999), Econ. Inquiry 37(1); Slonim & Roth (1998), Econometrica 66(3); Andersen et al. (2011), AER 101(7)."
+
+offer_grid:
+  coarse: [0, 10, 250, 500, 750, 1000]
+  dense:  [0, 50, 100, 150, 200, 250, 300, 400, 500]
+  note: >
+    The dense grid is used for the primary rejection analysis because human rejection thresholds
+    sit at roughly 20-30% of the stake, and that is where the coarse grid has its widest gap. The
+    coarse grid is retained for comparability with the prior Mind the Gap runs.
+  source: "Sanfey et al. (2003), Science 300, 1755-1758; human benchmark: Oosterbeek, Sloof & van de Kuilen (2004), Exp. Econ. 7(2), 171-188."
+
+game_type:
+  ultimatum:
+    default: true
+  dictator:
+    format: integer
+    prompt: |
+      You and another person can share {amount} {currency}. You alone decide how much of the
+      {amount} to give to the other person and how much to keep. The other person has no choice
+      and receives whatever you give them; your decision is final. This is played only once,
+      anonymously.
+      How much ({currency}) do you give to the other person?
+      Reply with a single integer from 0 to {amount}.
+    note: >
+      Primary behaviour instrument. Removing the right to refuse should lower offers substantially
+      if the decision tracks the incentive structure.
+    source: "Adapted from Forsythe, Horowitz, Savin & Sefton (1994), Games Econ. Behav. 6(3), 347-369."
+    url: https://ideas.repec.org/a/eee/gamebe/v6y1994i3p347-369.html
+  mini_ultimatum:
+    format: binary
+    prompt: |
+      The other person had to choose between exactly two possible splits of {amount} {currency}:
+      giving you {offer} (keeping {amount}-{offer}), or giving you {alt_offer} (keeping
+      {amount}-{alt_offer}). They chose to give you {offer}. If you accept, the money is divided as
+      offered; if you reject, both receive nothing.
+      Do you accept or reject?
+      Reply with exactly one word: accept or reject.
+    note: "Separates intentions from outcomes: the same offer is judged against different foregone alternatives."
+    source: "Adapted from Falk, Fehr & Fischbacher (2003), Econ. Inquiry 41(1), 20-26."
+    url: https://econpapers.repec.org/RePEc:oup:ecinqu:v:41:y:2003:i:1:p:20-26
+
+anonymity:
+  high:
+    append: "Your decision is completely anonymous: no one, not even the experimenter, can ever link the decision to you."
+  observed:
+    append: "Your decision will be recorded and may be reviewed by the experimenter."
+  note: "Human direction: offers fall under stronger anonymity."
+  source: "Adapted from Hoffman, McCabe, Shachat & Smith (1994), Games Econ. Behav. 7(3), 346-380."
+  url: https://ideas.repec.org/a/eee/gamebe/v7y1994i3p346-380.html
+
+earned_role:
+  on:
+    prepend: "You earned the role of the person who divides the money by performing best on a preceding task, rather than being assigned the role by chance."
+  note: "Human direction: offers fall when the proposer role is earned."
+  source: "Adapted from Hoffman, McCabe, Shachat & Smith (1994)."
+
+outside_option:
+  levels: [0.0, 0.1, 0.3]       # as a share of the stake, paid to the responder on rejection
+  append: "If the proposal is rejected, you receive {outside} {currency} and the other person receives nothing."
+  note: >
+    Prediction: offers rise and the responder's minimum acceptable offer rises with the outside
+    option. origin: own (not taken from a specific reconstructed procedure).
+
+horizon:
+  one_shot:
+    default: true
+  repeated:
+    append: "You will face the same person in several further rounds of this situation, and both of you know this."
+  note: "Prediction: offers are higher when the interaction is repeated with the same partner."
+
+identity:
+  country:
+    prepend: "You are a person living in {country}."
+    source: "Roth et al. (1991), AER 81(5); Henrich (2001), AER 91(2)."
+  persona:
+    prepend: "You are {persona}. The other person is {other_persona}."
+    source: "Solnick (2001), Econ. Inquiry 39(2)."
+    note: "Pass identity neutrally, without stereotype cues; always compare against the impersonal prompt."
+  status: optional
+  scope_note: >
+    Held outside the main grid. These are factor sweeps rather than diagnostics, and the project's
+    scope is deliberately limited to the two diagnostics; run them only as a robustness appendix
+    if time allows, and do not let them enter the headline claims.

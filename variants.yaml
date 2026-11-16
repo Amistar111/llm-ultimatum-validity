@@ -1,0 +1,215 @@
+# Game variants for the contamination diagnostic.
+# The strategic structure is identical in every variant; only canonical cues differ.
+version: 0.1
+
+v0:
+  label: Canonical Ultimatum Game
+  cues_present: [name, round_stake, canonical_framing]
+  source: "Adapted from Güth, Schmittberger & Schwarze (1982), J. Econ. Behav. Organ. 3(4), 367-388."
+  url: https://ideas.repec.org/a/eee/jeborg/v3y1982i4p367-388.html
+
+  proposer:
+    format: integer
+    paraphrases:
+      p01: |
+        You and another person can share {amount} {currency}. You decide how much of the {amount}
+        to give to the other person and how much to keep for yourself. The other person then
+        decides whether to accept or reject your proposal. If they accept, the money is divided as
+        you proposed. If they reject, both of you receive nothing. This is played only once, with a
+        person you will never meet and whose identity you will never know.
+        How much ({currency}) do you give to the other person?
+        Reply with a single integer from 0 to {amount}.
+      p02: |
+        A sum of {amount} {currency} is available to you and one other person. Your task is to
+        propose how the sum is split between the two of you. The other person sees your proposal
+        and either accepts it or rejects it. On acceptance each of you receives the amount set by
+        your proposal; on rejection neither of you receives anything. The two of you are anonymous
+        to each other and will interact only this once.
+        How much ({currency}) do you give to the other person?
+        Reply with a single integer from 0 to {amount}.
+      p03: |
+        There is {amount} {currency} to divide between you and an anonymous counterpart, in a
+        single interaction that will not be repeated. You propose the division. Your counterpart
+        may accept it, in which case the money is paid out as you proposed, or refuse it, in which
+        case both of you are paid nothing.
+        How much ({currency}) do you give to the other person?
+        Reply with a single integer from 0 to {amount}.
+      p04: |
+        You have been paired with one other person, whose identity you will never learn, for a
+        single decision. {amount} {currency} can be split between you. You state the split. The
+        other person then either agrees, and the money is paid out accordingly, or refuses, and
+        both of you end with nothing.
+        How much ({currency}) do you give to the other person?
+        Reply with a single integer from 0 to {amount}.
+      p05: |
+        Consider a one-shot, anonymous situation in which {amount} {currency} can be shared
+        between you and another person. You choose the amounts. The other person has the final
+        say: if that person accepts your choice, it is carried out; if that person rejects it,
+        neither side receives anything.
+        How much ({currency}) do you give to the other person?
+        Reply with a single integer from 0 to {amount}.
+
+  responder_direct:
+    format: binary
+    paraphrases:
+      p01: |
+        Another person was given {amount} {currency} and proposes to give you {offer} {currency},
+        keeping the rest for themselves. If you accept, the money is divided this way. If you
+        reject, both of you receive nothing. This is played only once, anonymously.
+        Do you accept or reject?
+        Reply with exactly one word: accept or reject.
+      p02: |
+        {amount} {currency} was placed at the disposal of another person, who has offered you
+        {offer} {currency} and keeps the remainder. Accepting means the money is paid out on those
+        terms; rejecting means neither of you is paid. You and the other person are anonymous and
+        interact only once.
+        Do you accept or reject?
+        Reply with exactly one word: accept or reject.
+      p03: |
+        An anonymous counterpart controls {amount} {currency} and has proposed that you receive
+        {offer} {currency}, with the rest going to them. Your decision is final and the situation
+        occurs only once: agreement pays out the proposed amounts, refusal pays nothing to either
+        side.
+        Do you accept or reject?
+        Reply with exactly one word: accept or reject.
+
+  responder_mao:
+    format: integer
+    paraphrases:
+      p01: |
+        Another person was given {amount} {currency} and will offer you some part of it. State the
+        smallest offer you would accept: any offer at or above this amount you accept, any offer
+        below it you reject.
+        What is your minimum acceptable offer?
+        Reply with a single integer from 0 to {amount}.
+      p02: |
+        An anonymous counterpart holds {amount} {currency} and will propose a share for you. Before
+        seeing the proposal, fix your threshold: proposals at or above it will be accepted,
+        proposals below it rejected. Rejection pays nothing to either side.
+        What is the lowest amount you would still accept?
+        Reply with a single integer from 0 to {amount}.
+      p03: |
+        {amount} {currency} is held by another person who will offer you part of it. Rather than
+        responding to a particular offer, state the cut-off that describes your decision: you take
+        anything at or above it and refuse anything below it.
+        What is your cut-off?
+        Reply with a single integer from 0 to {amount}.
+    note: >
+      Strategy method. Standard technique; yields a continuous response per run, which is why it
+      is the primary responder elicitation (see docs/protocol.md §1).
+
+v_l:
+  label: Relabelled (name and role cue removed)
+  cues_present: [round_stake, canonical_framing]
+  origin: own
+  note: >
+    Minimal relabelling: wording differs from v0 only in the names of the game, the roles, and the
+    two actions. No new element is introduced. In particular the tokens are NOT described as
+    earned, because earned entitlement is itself a treatment with a known effect on offers
+    (Hoffman et al. 1994) and would confound the relabelling test. The earned version is kept
+    separately as v_l_earned.
+
+  proposer:
+    format: integer
+    paraphrases:
+      p01: |
+        Two participants, A and B, can share {amount} tokens. Participant A states how many tokens
+        participant B receives and how many A keeps. Participant B then either approves the split,
+        in which case the tokens are distributed as stated, or cancels it, in which case neither
+        participant receives any tokens. This happens once, between participants who do not know
+        each other's identity. You are participant A.
+        How many tokens do you give to participant B?
+        Reply with a single integer from 0 to {amount}.
+      p02: |
+        You are participant A in a single, anonymous interaction with participant B. {amount}
+        tokens are available. You set how many tokens go to B and how many stay with you. B then
+        approves the allocation, in which case it is carried out, or cancels it, in which case both
+        participants end with zero tokens.
+        How many tokens do you give to participant B?
+        Reply with a single integer from 0 to {amount}.
+
+  responder_mao:
+    format: integer
+    paraphrases:
+      p01: |
+        You are participant B. Participant A holds {amount} tokens and will state how many of them
+        you receive. If you approve the allocation it is carried out; if you cancel it, neither
+        participant receives any tokens. State your threshold: you approve any allocation at or
+        above it and cancel anything below it.
+        What is your threshold?
+        Reply with a single integer from 0 to {amount}.
+
+v_l_earned:
+  label: Relabelled, tokens described as earned
+  cues_present: [round_stake, canonical_framing, earned_entitlement]
+  origin: own
+  note: >
+    Kept for comparison with v_l. The difference between the two isolates the effect of entitlement
+    language and shows whether any apparent relabelling effect is in fact an earned-role effect.
+  proposer:
+    format: integer
+    paraphrases:
+      p01: |
+        Two workers must divide {amount} tokens earned from a shared task. Worker A proposes how
+        many tokens Worker B receives; Worker B can approve the split or cancel it, in which case
+        neither worker gets any tokens. You are Worker A.
+        How many tokens do you give to Worker B?
+        Reply with a single integer from 0 to {amount}.
+
+v_f:
+  label: Market / exchange framing
+  cues_present: [name_absent, round_stake]
+  source: "Adapted from Hoffman, McCabe, Shachat & Smith (1994), Games Econ. Behav. 7(3), 346-380 — market framing of identical payoffs."
+  url: https://ideas.repec.org/a/eee/gamebe/v7y1994i3p346-380.html
+  proposer:
+    format: integer
+    paraphrases:
+      p01: |
+        You are the seller of a good and name its price out of {amount} {currency} of possible
+        surplus. The buyer can accept the price, in which case you trade and each keeps the agreed
+        share, or reject it, in which case there is no trade and both receive nothing. This is
+        played only once, anonymously.
+        What share of {amount} do you leave to the buyer?
+        Reply with a single integer from 0 to {amount}.
+      p02: |
+        A single anonymous transaction is possible between you and a buyer, with {amount}
+        {currency} of surplus at stake. You set the terms, which determine how the surplus is
+        divided. The buyer either agrees to the terms and the trade goes through, or declines, in
+        which case no trade occurs and neither side gains anything.
+        What share of {amount} do you leave to the buyer?
+        Reply with a single integer from 0 to {amount}.
+
+v_all:
+  label: All canonical cues removed
+  cues_present: []
+  origin: own
+  note: >
+    Relabelled (as v_l), non-round stake (see conditions.yaml, stake:non_round), and the
+    exchange framing. Run with {amount} = 970 rather than 1000.
+  proposer:
+    format: integer
+    paraphrases:
+      p01: |
+        A single anonymous transaction is possible between participant A and participant B, with
+        {amount} tokens of surplus at stake. Participant A sets the terms, which determine how the
+        surplus is divided. Participant B either agrees, and the terms are carried out, or
+        declines, in which case neither participant receives any tokens. You are participant A.
+        How many tokens do you leave to participant B?
+        Reply with a single integer from 0 to {amount}.
+      p02: |
+        You are participant A. {amount} tokens of surplus can be divided between you and
+        participant B in one anonymous transaction. You state the division. Participant B accepts
+        it, in which case it is carried out, or declines it, in which case both participants
+        receive zero tokens.
+        How many tokens do you leave to participant B?
+        Reply with a single integer from 0 to {amount}.
+  responder_mao:
+    format: integer
+    paraphrases:
+      p01: |
+        You are participant B in a single anonymous transaction with {amount} tokens of surplus.
+        Participant A will state how many tokens you receive. If you agree, the terms are carried
+        out; if you decline, neither participant receives any tokens. State your threshold: you
+        agree to anything at or above it and decline anything below it.
+        What is your threshold?
+        Reply with a single integer from 0 to {amount}.

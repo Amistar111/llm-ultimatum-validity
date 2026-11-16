@@ -1,0 +1,49 @@
+# Memory probes: knowledge elicited outside of play, to measure the recall channel.
+# The system frame in base.yaml is NOT applied here - probes are free text.
+version: 0.1
+
+settings:
+  runs_per_probe: 30
+  temperature: 0.7
+  context: fresh per run
+
+open_recall:
+  id: probe.open
+  prompt: |
+    Describe the Ultimatum Game as it is used in experimental economics, and state what results
+    are typically observed in it with human participants.
+  scored_for: [modal offer stated, value of that offer, rejection-rate claim, hedging]
+
+source_recall:
+  id: probe.source
+  prompt: |
+    Which experimental studies report those results for the Ultimatum Game? Name the authors and
+    the years.
+  scored_for: [correct attribution, fabricated citations]
+  note: "Fabricated citations are informative in their own right and are coded, not discarded."
+
+recognition:
+  id: probe.recognition
+  prompt: |
+    Below is a description of a decision situation used in an experiment. Does it correspond to a
+    known experimental paradigm? If so, name it.
+
+    {relabelled_instructions}
+  inputs: [v_l.proposer.p01, v_all.proposer.p01]
+  scored_for: [recognised yes/no, name produced]
+  note: >
+    Manipulation check for the relabelling instrument. If recognition is high, the invariance
+    comparison for that variant is uninformative and the conclusion must rest on the comparative
+    statics and the remaining probes. This is reported either way.
+
+counterfactual_knowledge:
+  id: probe.counterfactual
+  prompt: |
+    In experimental economics, how do offers in the Dictator Game compare with offers in the
+    Ultimatum Game, and what happens to offers and rejections when the amount at stake is made
+    much larger?
+  scored_for: [direction stated for dictator, direction stated for stakes, correctness]
+  note: >
+    Tests whether the comparative-statics predictions are themselves retrievable as memorised
+    facts. If they are, correct comparative statics are weaker evidence of behaviour than they
+    appear, and the claim is narrowed accordingly (docs/protocol.md §8).

@@ -1,0 +1,42 @@
+# Base definitions shared by every prompt. Version is bumped on any change.
+version: 0.1
+
+system_frame: |
+  You are taking part in a one-shot economic decision experiment. Read the situation and reply
+  ONLY in the exact format requested (a single integer, or the single word accept or reject).
+  Do not add any explanation.
+
+# The system frame is prepended to every user prompt, unchanged, in every variant.
+# origin: own — written for automatic answer parsing.
+
+placeholders:
+  amount: stake available to divide
+  currency: currency or unit label
+  offer: offer presented to the responder
+  alt_offer: the alternative the proposer could have chosen (mini-ultimatum only)
+  country: country of residence (identity conditions only)
+  persona: stated identity of the deciding player (identity conditions only)
+  other_persona: stated identity of the other player (identity conditions only)
+
+defaults:
+  currency: "experimental dollars ($)"
+  amount: 1000
+
+response_formats:
+  integer:
+    instruction: "Reply with a single integer from 0 to {amount}."
+    valid: integer in [0, amount]
+  binary:
+    instruction: "Reply with exactly one word: accept or reject."
+    valid: ["accept", "reject"]
+  free_text:
+    instruction: null        # probes only; no format constraint
+    valid: any
+
+parsing:
+  integer: first integer token in the response
+  binary: first occurrence of accept or reject, case-insensitive
+  invalid_handling: >
+    A response that does not parse, is out of range, or is a refusal is recorded as invalid and
+    is NOT resampled. Invalid and refusal rates are reported per cell as outcomes in their own
+    right.
